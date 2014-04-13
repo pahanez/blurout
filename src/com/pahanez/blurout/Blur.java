@@ -17,6 +17,7 @@ public class Blur {
 	
 	public static void in(final View view ){
 		view.setDrawingCacheEnabled(true);
+		//android_anndblur
 		/*view.getViewTreeObserver().addOnDrawListener(new OnDrawListener() {
 			
 			@Override
@@ -53,7 +54,7 @@ public class Blur {
 
                 Bitmap bmp = view.getDrawingCache();
                 
-                
+               
                 
                 Bitmap overlay = Bitmap.createBitmap((int) (view.getMeasuredWidth() ),
                         (int) (view.getMeasuredHeight()  ), Bitmap.Config.ARGB_8888);
@@ -87,7 +88,7 @@ public class Blur {
 
                 Bitmap bmp = view.getDrawingCache();
                 
-                
+                android.util.Log.e("p37td8", "blur #" + bmp);
                 
                 Bitmap overlay = Bitmap.createBitmap((int) (view.getMeasuredWidth() ),
                         (int) (view.getMeasuredHeight()  ), Bitmap.Config.ARGB_8888);
