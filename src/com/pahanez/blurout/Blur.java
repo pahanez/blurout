@@ -17,7 +17,7 @@ public class Blur {
 	
 	public static void in(final View view ){
 		view.setDrawingCacheEnabled(true);
-		//android_anndblur
+		//rs lib issues
 		/*view.getViewTreeObserver().addOnDrawListener(new OnDrawListener() {
 			
 			@Override
@@ -64,7 +64,7 @@ public class Blur {
 //                canvas.translate(-mButton.getLeft()/2 , -mButton.getTop()/2 );
 //                canvas.scale(0.5f, 0.5f );
                 Paint paint = new Paint();
-                bmp = StackBlur.fastblur(view.getContext(), bmp, 20);
+                bmp = StackBlurCustom.fastblur(view.getContext(), bmp, 20);
                 canvas.drawBitmap(bmp, 0, 0, paint);
                 view.setBackground(new BitmapDrawable(view.getContext().getResources(), overlay));
 				return true;
@@ -96,7 +96,7 @@ public class Blur {
                 Canvas canvas = new Canvas(overlay);
 
                 Paint paint = new Paint();
-                bmp = StackBlur.fastblur(view.getContext(), bmp, blurValue);
+                bmp = StackBlurCustom.fastblur(view.getContext(), bmp, blurValue);
                 canvas.drawBitmap(bmp, 0, 0, paint);
                 view.setBackground(new BitmapDrawable(view.getContext().getResources(), overlay));
 				return true;
