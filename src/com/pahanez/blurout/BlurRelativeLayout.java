@@ -3,6 +3,7 @@ package com.pahanez.blurout;
 import android.content.Context;
 import android.graphics.Canvas;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.widget.RelativeLayout;
 
 public class BlurRelativeLayout extends RelativeLayout{
@@ -46,7 +47,10 @@ public class BlurRelativeLayout extends RelativeLayout{
 	
 	@Override
 	protected void dispatchDraw(Canvas canvas) {
-		blurer.drawToCanvas(canvas);
+		if(blurer != null){
+			Log.e("p37td8" , "ckeck");			
+			blurer.drawToCanvas(canvas);
+		}
         super.dispatchDraw(canvas);
 	}
 
