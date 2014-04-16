@@ -1,8 +1,15 @@
 package com.pahanez.blurout;
 
 import android.annotation.SuppressLint;
+import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
+import android.graphics.Paint;
+import android.os.Build.VERSION;
+import android.renderscript.Allocation;
+import android.renderscript.Element;
+import android.renderscript.RenderScript;
+import android.renderscript.ScriptIntrinsicBlur;
 import android.view.View;
 import android.view.ViewTreeObserver;
 
@@ -13,9 +20,17 @@ public class BlurOne {
 	private View mView;
 	private int mRadius;
 	private Bitmap mBitmap;
+	private Bitmap mInitialBitmap;
+	private Paint mPaint = new Paint();
+	
+	private RenderScript mRs;
 
+	@SuppressLint("NewApi")
 	public BlurOne(View view) {
 		this.mView = view;
+		mView.setDrawingCacheEnabled(true);
+		mInitialBitmap = mView.getDrawingCache();
+		mRs = RenderScript.create(view.getContext());
 	}
 
 	@SuppressLint("MissingSuperCall")
@@ -34,7 +49,9 @@ public class BlurOne {
 	public void drawToCanvas(Canvas canvas) {
 		 if (mBitmap != null) {
 	            // Draw off-screen bitmap using inverse of the scale matrix
-	            canvas.drawBitmap(mBitmap, mMatrixScaleInv, null);
+	            if(mBitmap != null){
+	            	canvas.drawBitmap(mBitmap, 0, 0 , mPaint);
+	            }
 	        }
 	}
 
@@ -58,13 +75,30 @@ public class BlurOne {
 
 	        if (mBitmap == null || mBitmap.getWidth() != width
 	                || mBitmap.getHeight() != height) {
-	        	mBitmap = Blur.in(mView);
+	        	mBitmap = fastblur(mInitialBitmap, 15);
 	        }
 	        
 	        
 	        
 	        
 		}
+		
 	};
 
+	@SuppressLint("NewApi")
+	public Bitmap fastblur(Bitmap sentBitmap, int radius) {
+		
+		if (VERSION.SDK_INT > 16) {
+			Bitmap bitmap = sentBitmap.copy(sentBitmap.getConfig(), true);
+				
+			final Allocation input = Allocation.createFromBitmap(mRs, sentBitmap, Allocation.MipmapControl.MIPMAP_NONE,
+					Allocation.USAGE_SCRIPT);
+			final Allocation output = Allocation.createTyped(mRs, input.getType());
+			final ScriptIntrinsicBlur script = ScriptIntrinsicBlur.create(mRs, Element.U8_4(mRs));
+			script.setRadius(radius /* e.g. 3.f */);
+			script.setInput(input);
+			script.forEach(output);
+			output.copyTo(bitmap);
+			return bitmap;
+		}return null;}
 }
