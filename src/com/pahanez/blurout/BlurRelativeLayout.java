@@ -12,18 +12,17 @@ public class BlurRelativeLayout extends RelativeLayout{
 
 	public BlurRelativeLayout(Context context, AttributeSet attrs, int defStyle) {
 		super(context, attrs, defStyle);
-		initBlur();
 	}
 
 	public BlurRelativeLayout(Context context, AttributeSet attrs) {
 		super(context, attrs);
-		initBlur();
 	}
 
 	public BlurRelativeLayout(Context context) {
 		super(context);
-		initBlur();
+		
 	}
+	
 	
 	private void initBlur(){
 		blurer = new BlurOne(this);
@@ -32,6 +31,7 @@ public class BlurRelativeLayout extends RelativeLayout{
 	@Override
 	protected void onAttachedToWindow() {
 		super.onAttachedToWindow();
+		initBlur();
 		blurer.onAttachedToWindow();
 	}
 	
@@ -46,13 +46,28 @@ public class BlurRelativeLayout extends RelativeLayout{
     }
 	
 	@Override
+	protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
+		setDrawingCacheEnabled(true);
+		super.onMeasure(widthMeasureSpec, heightMeasureSpec);
+		Log.e("p37td8" , "meas v W " + getWidth() + " , H : " + getHeight());	
+	}
+	
+	@Override
+	protected void onLayout(boolean changed, int l, int t, int r, int b) {
+		super.onLayout(changed, l, t, r, b);
+		buildDrawingCache();
+		blurer.onMeasured();
+		Log.e("p37td8" , "layo v W " + getWidth() + " , H : " + getHeight());			
+	}
+	
+	@Override
 	protected void dispatchDraw(Canvas canvas) {
 		if(blurer != null){
-			Log.e("p37td8" , "ckeck");			
 			blurer.drawToCanvas(canvas);
 		}
         super.dispatchDraw(canvas);
 	}
+	
 
 
 }
